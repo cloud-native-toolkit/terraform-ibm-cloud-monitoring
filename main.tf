@@ -17,14 +17,14 @@ data "ibm_resource_group" "tools_resource_group" {
 }
 
 locals {
-  access_key  = ibm_resource_key.sysdig_instance_key[0].credentials["Sysdig Access Key"]
-  endpoint    = ibm_resource_key.sysdig_instance_key[0].credentials["Sysdig Collector Endpoint"]
   name_prefix = var.name_prefix != "" ? var.name_prefix : var.resource_group_name
   name        = var.name != "" ? var.name : "${replace(local.name_prefix, "/[^a-zA-Z0-9_\\-\\.]/", "")}-sysdig"
   role        = "Manager"
   provision   = var.provision
   bind        = (var.provision || (!var.provision && var.name != "")) && var.cluster_config_file_path != "" && var.cluster_type != ""
   image_url   = var.base_icon_url != "" ? "${var.base_icon_url}/sysdig" : ""
+  access_key  = local.bind ? ibm_resource_key.sysdig_instance_key[0].credentials["Sysdig Access Key"] : ""
+  endpoint    = local.bind ? ibm_resource_key.sysdig_instance_key[0].credentials["Sysdig Collector Endpoint"] : ""
 }
 
 // SysDig - Monitoring

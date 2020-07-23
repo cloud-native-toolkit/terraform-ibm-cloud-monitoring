@@ -20,11 +20,8 @@ locals {
   name_prefix = var.name_prefix != "" ? var.name_prefix : var.resource_group_name
   name        = var.name != "" ? var.name : "${replace(local.name_prefix, "/[^a-zA-Z0-9_\\-\\.]/", "")}-sysdig"
   role        = "Manager"
-  provision   = var.provision
-  bind        = (var.provision || (!var.provision && var.name != "")) && var.cluster_config_file_path != "" && var.cluster_type != ""
-  image_url   = var.base_icon_url != "" ? "${var.base_icon_url}/sysdig" : ""
-  access_key  = local.bind ? ibm_resource_key.sysdig_instance_key[0].credentials["Sysdig Access Key"] : ""
-  endpoint    = local.bind ? ibm_resource_key.sysdig_instance_key[0].credentials["Sysdig Collector Endpoint"] : ""
+  provision         = var.provision
+  bind              = (var.provision || (!var.provision && var.name != "")) && var.cluster_id != ""
 }
 
 // SysDig - Monitoring
@@ -69,29 +66,28 @@ resource "ibm_resource_key" "sysdig_instance_key" {
   }
 }
 
-resource "null_resource" "create_sysdig_agent" {
-  count      = local.bind ? 1 : 0
-  depends_on = [ibm_resource_key.sysdig_instance_key]
+resource "null_resource" "setup-ob-plugin" {
+  provisioner "local-exec" {
+    command = "${path.module}/scripts/setup-ob-plugin.sh"
+  }
+}
+
+resource "null_resource" "sysdig_bind" {
+  count = local.bind ? 1 : 0
+  depends_on = [null_resource.setup-ob-plugin]
 
   triggers = {
-    kubeconfig = var.cluster_config_file_path
+    cluster_id  = var.cluster_id
+    instance_id = data.ibm_resource_instance.sysdig_instance[0].id
   }
 
   provisioner "local-exec" {
-    command = "${path.module}/scripts/bind-sysdig.sh ${local.access_key} ${local.endpoint} ${var.namespace} ${var.cluster_type}"
-
-    environment = {
-      KUBECONFIG = self.triggers.kubeconfig
-    }
+    command = "${path.module}/scripts/bind-instance.sh ${self.triggers.cluster_id} ${self.triggers.instance_id} ${ibm_resource_key.sysdig_instance_key[0].name}"
   }
 
   provisioner "local-exec" {
     when    = destroy
-    command = "${path.module}/scripts/unbind-sysdig.sh"
-
-    environment = {
-      KUBECONFIG = self.triggers.kubeconfig
-    }
+    command = "${path.module}/scripts/unbind-instance.sh ${self.triggers.cluster_id} ${self.triggers.instance_id}"
   }
 }
 
@@ -109,7 +105,7 @@ resource "null_resource" "delete-consolelink" {
 
 resource "helm_release" "sysdig" {
   count      = local.bind ? 1 : 0
-  depends_on = [null_resource.create_sysdig_agent, null_resource.delete-consolelink]
+  depends_on = [null_resource.sysdig_bind, null_resource.delete-consolelink]
 
   name              = "sysdig"
   chart             = "tool-config"
@@ -129,11 +125,6 @@ resource "helm_release" "sysdig" {
   set {
     name  = "url"
     value = "https://cloud.ibm.com/observe/monitoring"
-  }
-
-  set {
-    name  = "imageUrl"
-    value = local.image_url
   }
 
   set {

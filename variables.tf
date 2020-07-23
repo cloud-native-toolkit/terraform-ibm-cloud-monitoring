@@ -37,16 +37,16 @@ variable "name" {
   default     = ""
 }
 
-variable "service_account_name" {
-  type        = string
-  description = "The service account that the logdna agent should run under"
-  default     = "logdna-agent"
-}
-
 variable "namespace" {
   type        = string
   description = "The namespace where the agent should be deployed"
   default     = "ibm-observe"
+}
+
+variable "cluster_id" {
+  type        = string
+  description = "The id of the cluster into which the sysdig instance should be bound"
+  default     = ""
 }
 
 variable "cluster_config_file_path" {
@@ -58,11 +58,5 @@ variable "cluster_config_file_path" {
 variable "cluster_type" {
   type        = string
   description = "The type of cluster that should be created (openshift or ocp3 or ocp4 or kubernetes)"
-  default     = ""
-}
-
-variable "base_icon_url" {
-  type        = string
-  description = "The base url where the logos for the application menu can be found"
   default     = ""
 }

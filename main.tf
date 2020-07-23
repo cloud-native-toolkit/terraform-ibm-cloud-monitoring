@@ -79,7 +79,7 @@ resource "null_resource" "sysdig_bind" {
 
   triggers = {
     cluster_id  = var.cluster_id
-    instance_id = data.ibm_resource_instance.sysdig_instance[0].id
+    instance_id = var.name
   }
 
   provisioner "local-exec" {

@@ -20,8 +20,9 @@ locals {
   name_prefix = var.name_prefix != "" ? var.name_prefix : var.resource_group_name
   name        = var.name != "" ? var.name : "${replace(local.name_prefix, "/[^a-zA-Z0-9_\\-\\.]/", "")}-sysdig"
   role        = "Manager"
-  provision         = var.provision
-  bind              = (var.provision || (!var.provision && var.name != "")) && var.cluster_id != ""
+  provision   = var.provision
+  bind        = (var.provision || (!var.provision && var.name != "")) && var.cluster_id != ""
+  access_key  = local.bind ? ibm_resource_key.sysdig_instance_key[0].credentials["Sysdig Access Key"] : ""
 }
 
 // SysDig - Monitoring
@@ -82,7 +83,7 @@ resource "null_resource" "sysdig_bind" {
   }
 
   provisioner "local-exec" {
-    command = "${path.module}/scripts/bind-instance.sh ${self.triggers.cluster_id} ${self.triggers.instance_id} ${ibm_resource_key.sysdig_instance_key[0].name}"
+    command = "${path.module}/scripts/bind-instance.sh ${self.triggers.cluster_id} ${self.triggers.instance_id} ${local.access_key}"
   }
 
   provisioner "local-exec" {

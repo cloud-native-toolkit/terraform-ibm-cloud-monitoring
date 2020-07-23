@@ -1,4 +1,4 @@
-module "dev_logdna" {
+module "dev_sysdig" {
   source = "./module"
 
   resource_group_name      = var.resource_group_name

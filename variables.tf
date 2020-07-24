@@ -60,3 +60,9 @@ variable "cluster_type" {
   description = "The type of cluster that should be created (openshift or ocp3 or ocp4 or kubernetes)"
   default     = ""
 }
+
+variable "sync" {
+  type        = string
+  description = "Semaphore value to sync up modules"
+  default     = ""
+}

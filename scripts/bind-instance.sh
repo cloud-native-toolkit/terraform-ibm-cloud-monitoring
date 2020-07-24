@@ -9,6 +9,7 @@ ACCESS_KEY="$3"
 
 echo "Configuring Sysdig for ${CLUSTER_ID} cluster and ${INSTANCE_NAME} Sysdig instance"
 
+ibmcloud target
 if ibmcloud ob monitoring config ls --cluster "${CLUSTER_ID}" | grep -q "Instance name"; then
   EXISTING_INSTANCE_NAME=$(ibmcloud ob monitoring config ls --cluster "${CLUSTER_ID}" | grep "Instance name" | sed -E "s/Instance name: +([^ ]+)/\1/g")
   if [[ "${EXISTING_INSTANCE_NAME}" == "${INSTANCE_NAME}" ]]; then

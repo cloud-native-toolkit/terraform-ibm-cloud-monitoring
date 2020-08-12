@@ -66,3 +66,9 @@ variable "sync" {
   description = "Semaphore value to sync up modules"
   default     = ""
 }
+
+variable "tools_namespace" {
+  type        = string
+  description = "The namespace where the tools have been deployed (where the configmap should be created)"
+  default     = "default"
+}

@@ -22,6 +22,8 @@ if ibmcloud ob monitoring config ls --cluster "${CLUSTER_ID}" | grep -q "Instanc
       --cluster "${CLUSTER_ID}" \
       --instance "${EXISTING_INSTANCE_ID}" \
       --force
+
+      sleep 60
   fi
 else
   echo "No existing binding found for cluster ${CLUSTER_ID}"

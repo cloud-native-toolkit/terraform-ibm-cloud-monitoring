@@ -43,6 +43,12 @@ variable "namespace" {
   default     = "ibm-observe"
 }
 
+variable "cluster_name" {
+  type        = string
+  description = "The name of the cluster into which the sysdig instance should be bound"
+  default     = ""
+}
+
 variable "cluster_id" {
   type        = string
   description = "The id of the cluster into which the sysdig instance should be bound"

@@ -1,5 +1,5 @@
 provider "ibm" {
-  version = ">= 1.2.1"
+  version = ">= 1.9.0"
   region  = var.resource_location
 }
 
@@ -21,7 +21,7 @@ locals {
   name        = var.name != "" ? var.name : "${replace(local.name_prefix, "/[^a-zA-Z0-9_\\-\\.]/", "")}-sysdig"
   role        = "Manager"
   provision   = var.provision
-  bind        = (var.provision || (!var.provision && var.name != "")) && var.cluster_id != ""
+  bind        = (var.provision || (!var.provision && var.name != "")) && var.cluster_name != ""
   access_key  = local.bind ? ibm_resource_key.sysdig_instance_key[0].credentials["Sysdig Access Key"] : ""
 }
 
@@ -79,7 +79,7 @@ resource "null_resource" "sysdig_bind" {
 
   triggers = {
     cluster_id  = var.cluster_id
-    instance_id = var.name
+    instance_id = data.ibm_resource_instance.sysdig_instance[0].guid
   }
 
   provisioner "local-exec" {

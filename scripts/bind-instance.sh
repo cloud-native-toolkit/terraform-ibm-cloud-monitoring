@@ -6,6 +6,13 @@ MODULE_DIR=$(cd ${SCRIPT_DIR}/..; pwd -P)
 CLUSTER_ID="$1"
 INSTANCE_ID="$2"
 ACCESS_KEY="$3"
+PRIVATE="$4"
+
+if [[ "${PRIVATE}" == "true" ]]; then
+  PRIVATE="--private-endpoint"
+else
+  PRIVATE=""
+fi
 
 echo "Configuring Sysdig for ${CLUSTER_ID} cluster and ${INSTANCE_ID} Sysdig instance"
 
@@ -35,5 +42,5 @@ set -e
 echo "Creating Sysdig configuration for ${CLUSTER_ID} cluster and ${INSTANCE_ID} Sysdig instance"
 ibmcloud ob monitoring config create \
   --cluster "${CLUSTER_ID}" \
-  --instance "${INSTANCE_ID}" \
+  --instance "${INSTANCE_ID}" ${PRIVATE} \
   --sysdig-access-key "${ACCESS_KEY}"

@@ -83,7 +83,7 @@ resource "null_resource" "sysdig_bind" {
   }
 
   provisioner "local-exec" {
-    command = "${path.module}/scripts/bind-instance.sh ${self.triggers.cluster_id} ${self.triggers.instance_id} ${local.access_key}"
+    command = "${path.module}/scripts/bind-instance.sh ${self.triggers.cluster_id} ${self.triggers.instance_id} ${local.access_key} ${var.private_endpoint}"
 
     environment = {
       SYNC = var.sync

@@ -78,3 +78,9 @@ variable "tools_namespace" {
   description = "The namespace where the tools have been deployed (where the configmap should be created)"
   default     = "default"
 }
+
+variable "private_endpoint" {
+  type        = string
+  description = "Flag indicating that the agent should be created with private endpoints"
+  default     = "true"
+}

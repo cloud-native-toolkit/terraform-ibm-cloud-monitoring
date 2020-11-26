@@ -1,0 +1,45 @@
+name: sysdig
+type: terraform
+description: Module to set up the Sysdig into a cluster
+tags:
+    - tools
+    - devops
+    - image registry
+versions:
+- platforms:
+    - kubernetes
+    - ocp3
+    - ocp4
+  dependencies:
+    - id: cluster
+      refs:
+        - source: github.com/ibm-garage-cloud/terraform-ibm-container-platform
+          version: ">= 1.7.0"
+        - source: github.com/ibm-garage-cloud/terraform-k8s-ocp-cluster
+          version: ">= 2.0.0"
+    - id: namespace
+      refs:
+        - source: github.com/ibm-garage-cloud/terraform-k8s-namespace
+          version: ">= 2.1.0"
+  variables:
+    - name: cluster_id
+      moduleRef:
+        id: cluster
+        output: id
+    - name: cluster_name
+      moduleRef:
+        id: cluster
+        output: name
+    - name: cluster_type
+      moduleRef:
+        id: cluster
+        output: type_code
+    - name: cluster_config_file_path
+      moduleRef:
+        id: cluster
+        output: config_file_path
+    - name: tools_namespace
+      moduleRef:
+        id: namespace
+        output: name
+        discriminator: tools

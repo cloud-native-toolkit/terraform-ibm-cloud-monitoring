@@ -4,7 +4,7 @@ description: Module to set up the Sysdig into a cluster
 tags:
     - tools
     - devops
-    - image registry
+    - monitoring
 versions:
 - platforms:
     - kubernetes

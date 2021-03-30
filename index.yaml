@@ -1,4 +1,4 @@
-id: github.com/ibm-garage-cloud/terraform-ibm-sysdig
+id: github.com/cloud-native-toolkit/terraform-ibm-sysdig
 name: sysdig
 type: terraform
 description: Module to set up the Sysdig into a cluster
@@ -7,6 +7,111 @@ tags:
   - devops
   - monitoring
 versions:
+  - platforms:
+      - kubernetes
+      - ocp3
+      - ocp4
+    dependencies:
+      - id: cluster
+        refs:
+          - source: github.com/ibm-garage-cloud/terraform-ibm-container-platform
+            version: ">= 1.7.0"
+          - source: github.com/ibm-garage-cloud/terraform-k8s-ocp-cluster
+            version: ">= 2.0.0"
+      - id: namespace
+        refs:
+          - source: github.com/ibm-garage-cloud/terraform-k8s-namespace
+            version: ">= 2.1.0"
+    variables:
+      - name: cluster_id
+        moduleRef:
+          id: cluster
+          output: id
+        type: string
+        description: The id of the cluster into which the sysdig instance should be bound
+        default: ""
+        optional: true
+      - name: cluster_name
+        moduleRef:
+          id: cluster
+          output: name
+        type: string
+        description: The name of the cluster into which the sysdig instance should be bound
+        default: ""
+        optional: true
+      - name: cluster_type
+        moduleRef:
+          id: cluster
+          output: type_code
+        type: string
+        description: The type of cluster that should be created (openshift or ocp3 or ocp4 or kubernetes)
+        default: ""
+        optional: true
+      - name: cluster_config_file_path
+        moduleRef:
+          id: cluster
+          output: config_file_path
+        type: string
+        description: The path to the config file for the cluster
+        default: ""
+        optional: true
+      - name: tools_namespace
+        moduleRef:
+          id: namespace
+          output: name
+          discriminator: tools
+        type: string
+        description: The namespace where the tools have been deployed (where the configmap should be created)
+        default: default
+        optional: true
+      - name: resource_group_name
+        type: string
+        description: Existing resource group where the IKS cluster will be provisioned.
+      - name: resource_location
+        type: string
+        description: Geographic location of the resource (e.g. us-south, us-east)
+      - name: name_prefix
+        type: string
+        description: The prefix name for the service. If not provided it will default to the resource group name
+        default: ""
+        optional: true
+      - name: plan
+        type: string
+        description: The type of plan the service instance should run under (trial or graduated-tier)
+        default: graduated-tier
+        optional: true
+      - name: tags
+        type: list(string)
+        description: Tags that should be applied to the service
+        default: []
+        optional: true
+      - name: provision
+        type: bool
+        description: Flag indicating that logdna instance should be provisioned
+      - name: name
+        type: string
+        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
+        default: ""
+        optional: true
+      - name: namespace
+        type: string
+        description: The namespace where the agent should be deployed
+        default: ibm-observe
+        optional: true
+      - name: sync
+        type: string
+        description: Semaphore value to sync up modules
+        default: ""
+        optional: true
+      - name: private_endpoint
+        type: string
+        description: Flag indicating that the agent should be created with private endpoints
+        default: "true"
+        optional: true
+    version: v2.4.0
+    outputs:
+      - name: sync
+        description: output "sync" {   value = "sysdig"   depends_on = [helm_release.sysdig] }
   - platforms:
       - kubernetes
       - ocp3

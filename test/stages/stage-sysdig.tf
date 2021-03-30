@@ -2,7 +2,7 @@ module "dev_sysdig" {
   source = "./module"
 
   resource_group_name      = var.resource_group_name
-  resource_location        = var.region
+  region                   = var.region
   provision                = true
   cluster_id               = module.dev_cluster.id
   cluster_name             = module.dev_cluster.name

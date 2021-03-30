@@ -43,3 +43,11 @@ versions:
         id: namespace
         output: name
         discriminator: tools
+    - name: resource_group_name
+      scope: global
+    - name: region
+      scope: global
+    - name: name_prefix
+      scope: global
+    - name: private_endpoint
+      scope: global

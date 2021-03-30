@@ -3,7 +3,7 @@ variable "resource_group_name" {
   description = "Existing resource group where the IKS cluster will be provisioned."
 }
 
-variable "resource_location" {
+variable "region" {
   type        = string
   description = "Geographic location of the resource (e.g. us-south, us-east)"
 }

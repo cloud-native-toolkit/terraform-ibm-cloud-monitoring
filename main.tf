@@ -1,6 +1,6 @@
 provider "ibm" {
   version = ">= 1.9.0"
-  region  = var.resource_location
+  region  = var.region
 }
 
 provider "helm" {

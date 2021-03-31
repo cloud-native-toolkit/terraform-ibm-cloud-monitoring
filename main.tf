@@ -110,6 +110,10 @@ resource null_resource cluster_type {
 
   provisioner "local-exec" {
     command = "kubectl api-resources -o name | grep consolelink && echo -n 'ocp4' > ${local.cluster_type_file}"
+
+    environment = {
+      KUBECONFIG = var.cluster_config_file_path
+    }
   }
 }
 

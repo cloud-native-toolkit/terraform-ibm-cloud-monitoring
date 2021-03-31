@@ -17,12 +17,15 @@ data "ibm_resource_group" "tools_resource_group" {
 }
 
 locals {
+  tmp_dir     = "${path.cwd}/.tmp"
   name_prefix = var.name_prefix != "" ? var.name_prefix : var.resource_group_name
   name        = var.name != "" ? var.name : "${replace(local.name_prefix, "/[^a-zA-Z0-9_\\-\\.]/", "")}-sysdig"
   role        = "Manager"
   provision   = var.provision
   bind        = (var.provision || (!var.provision && var.name != "")) && var.cluster_name != ""
   access_key  = local.bind ? ibm_resource_key.sysdig_instance_key[0].credentials["Sysdig Access Key"] : ""
+  cluster_type_file = "${local.tmp_dir}/cluster_type.out"
+  cluster_type      = data.local_file.cluster_type.content
 }
 
 // SysDig - Monitoring
@@ -96,11 +99,35 @@ resource "null_resource" "sysdig_bind" {
   }
 }
 
-resource "null_resource" "delete-consolelink" {
-  count = var.cluster_type == "ocp4" && local.bind ? 1 : 0
+resource null_resource create_tmp_dir {
+  provisioner "local-exec" {
+    command = "mkdir -p ${local.tmp_dir}"
+  }
+}
+
+resource null_resource cluster_type {
+  depends_on = [null_resource.create_tmp_dir]
 
   provisioner "local-exec" {
-    command = "kubectl delete consolelink -l grouping=garage-cloud-native-toolkit -l app=sysdig || exit 0"
+    command = "kubectl api-resources -o name | grep consolelink && echo -n 'ocp4' > ${local.cluster_type_file}"
+
+    environment = {
+      KUBECONFIG = var.cluster_config_file_path
+    }
+  }
+}
+
+data local_file cluster_type {
+  depends_on = [null_resource.cluster_type]
+
+  filename = local.cluster_type_file
+}
+
+resource "null_resource" "delete-consolelink" {
+  count = local.bind ? 1 : 0
+
+  provisioner "local-exec" {
+    command = "kubectl api-resources -o name | grep consolelink && kubectl delete consolelink -l grouping=garage-cloud-native-toolkit -l app=sysdig || exit 0"
 
     environment = {
       KUBECONFIG = var.cluster_config_file_path
@@ -139,6 +166,6 @@ resource "helm_release" "sysdig" {
 
   set {
     name  = "global.clusterType"
-    value = var.cluster_type
+    value = local.cluster_type
   }
 }

@@ -26,23 +26,23 @@ versions:
       moduleRef:
         id: cluster
         output: id
+      optional: true
     - name: cluster_name
       moduleRef:
         id: cluster
         output: name
-    - name: cluster_type
-      moduleRef:
-        id: cluster
-        output: type_code
+      optional: true
     - name: cluster_config_file_path
       moduleRef:
         id: cluster
         output: config_file_path
+      optional: true
     - name: tools_namespace
       moduleRef:
         id: namespace
         output: name
         discriminator: tools
+      optional: true
     - name: resource_group_name
       scope: global
     - name: region

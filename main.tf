@@ -1,16 +1,3 @@
-provider "ibm" {
-  version = ">= 1.9.0"
-  region  = var.region
-}
-
-provider "helm" {
-  version = ">= 1.1.1"
-  kubernetes {
-    config_path = var.cluster_config_file_path
-  }
-}
-
-provider "null" {}
 
 data "ibm_resource_group" "tools_resource_group" {
   name = var.resource_group_name

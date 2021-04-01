@@ -25,6 +25,62 @@ versions:
             version: ">= 2.1.0"
         optional: true
     variables:
+      - name: resource_group_name
+        scope: global
+        type: string
+        description: Existing resource group where the IKS cluster will be provisioned.
+      - name: region
+        scope: global
+        type: string
+        description: Geographic location of the resource (e.g. us-south, us-east)
+      - name: name_prefix
+        scope: global
+        type: string
+        description: The prefix name for the service. If not provided it will default to the resource group name
+        default: ""
+        optional: true
+      - name: plan
+        type: string
+        description: The type of plan the service instance should run under (trial or graduated-tier)
+        default: graduated-tier
+        optional: true
+      - name: tags
+        type: list(string)
+        description: Tags that should be applied to the service
+        default: []
+        optional: true
+      - name: provision
+        type: bool
+        description: Flag indicating that logdna instance should be provisioned
+      - name: name
+        type: string
+        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
+        default: ""
+        optional: true
+    version: v3.1.0
+    outputs:
+      - name: id
+        description: The id of the provisioned LogDNA instance.
+      - name: name
+        description: The name of the provisioned LogDNA instance.
+  - platforms:
+      - kubernetes
+      - ocp3
+      - ocp4
+    dependencies:
+      - id: cluster
+        refs:
+          - source: github.com/ibm-garage-cloud/terraform-ibm-container-platform
+            version: ">= 1.7.0"
+          - source: github.com/ibm-garage-cloud/terraform-k8s-ocp-cluster
+            version: ">= 2.0.0"
+        optional: true
+      - id: namespace
+        refs:
+          - source: github.com/ibm-garage-cloud/terraform-k8s-namespace
+            version: ">= 2.1.0"
+        optional: true
+    variables:
       - name: cluster_id
         moduleRef:
           id: cluster

@@ -24,32 +24,9 @@ versions:
           version: ">= 2.1.0"
       optional: true
   variables:
-    - name: cluster_id
-      moduleRef:
-        id: cluster
-        output: id
-      optional: true
-    - name: cluster_name
-      moduleRef:
-        id: cluster
-        output: name
-      optional: true
-    - name: cluster_config_file_path
-      moduleRef:
-        id: cluster
-        output: config_file_path
-      optional: true
-    - name: tools_namespace
-      moduleRef:
-        id: namespace
-        output: name
-        discriminator: tools
-      optional: true
     - name: resource_group_name
       scope: global
     - name: region
       scope: global
     - name: name_prefix
-      scope: global
-    - name: private_endpoint
       scope: global

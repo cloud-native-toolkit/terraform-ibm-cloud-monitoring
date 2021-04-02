@@ -29,6 +29,7 @@ variable "tags" {
 variable "provision" {
   type        = bool
   description = "Flag indicating that logdna instance should be provisioned"
+  default     = true
 }
 
 variable "name" {

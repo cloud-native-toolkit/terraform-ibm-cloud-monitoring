@@ -19,3 +19,9 @@ output "key_name" {
   depends_on  = [ibm_resource_key.sysdig_instance_key]
   description = "The name of the key provisioned for the Sysdig instance."
 }
+
+output "access_key" {
+  value       = ibm_resource_key.sysdig_instance_key.credentials["Sysdig Access Key"]
+  description = "The access key for the Sysdig instance."
+  sensitive   = true
+}

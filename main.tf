@@ -1,4 +1,13 @@
 
+locals {
+  tmp_dir     = "${path.cwd}/.tmp"
+  name_prefix = var.name_prefix != "" ? var.name_prefix : var.resource_group_name
+  name        = var.name != "" ? var.name : "${replace(local.name_prefix, "/[^a-zA-Z0-9_\\-\\.]/", "")}-sysdig"
+  key_name    = "${local.name}-key"
+  role        = "Manager"
+  provision   = var.provision
+}
+
 resource null_resource print_names {
   provisioner "local-exec" {
     command = "echo 'Resource group: ${var.resource_group_name}'"
@@ -9,15 +18,6 @@ data "ibm_resource_group" "tools_resource_group" {
   depends_on = [null_resource.print_names]
 
   name = var.resource_group_name
-}
-
-locals {
-  tmp_dir     = "${path.cwd}/.tmp"
-  name_prefix = var.name_prefix != "" ? var.name_prefix : var.resource_group_name
-  name        = var.name != "" ? var.name : "${replace(local.name_prefix, "/[^a-zA-Z0-9_\\-\\.]/", "")}-sysdig"
-  key_name    = "${local.name}-key"
-  role        = "Manager"
-  provision   = var.provision
 }
 
 // SysDig - Monitoring

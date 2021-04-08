@@ -22,6 +22,47 @@ versions:
           id: resource_group
           output: name
         type: string
+      - name: region
+        scope: global
+        type: string
+      - name: name_prefix
+        scope: global
+        type: string
+      - name: plan
+        type: string
+      - name: tags
+        type: string
+      - name: provision
+        type: string
+      - name: name
+        type: string
+    version: v3.2.1
+    outputs:
+      - name: id
+        description: The id of the provisioned Sysdig instance.
+      - name: name
+        description: The name of the provisioned Sysdig instance.
+      - name: guid
+        description: The id of the provisioned Sysdig instance.
+      - name: key_name
+        description: The name of the key provisioned for the Sysdig instance.
+      - name: access_key
+        description: The access key for the Sysdig instance.
+  - platforms:
+      - kubernetes
+      - ocp3
+      - ocp4
+    dependencies:
+      - id: resource_group
+        refs:
+          - source: github.com/cloud-native-toolkit/terraform-ibm-resource-group
+            version: ">= 2.1.0"
+    variables:
+      - name: resource_group_name
+        moduleRef:
+          id: resource_group
+          output: name
+        type: string
         description: Existing resource group where the IKS cluster will be provisioned.
       - name: region
         scope: global

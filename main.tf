@@ -5,7 +5,6 @@ locals {
   name        = var.name != "" ? var.name : "${replace(local.name_prefix, "/[^a-zA-Z0-9_\\-\\.]/", "")}-sysdig"
   key_name    = "${local.name}-key"
   role        = "Manager"
-  provision   = var.provision
 }
 
 resource null_resource print_names {
@@ -22,14 +21,14 @@ data "ibm_resource_group" "tools_resource_group" {
 
 // SysDig - Monitoring
 resource ibm_resource_instance sysdig_instance {
-  count             = local.provision ? 1 : 0
+  count             = var.provision ? 1 : 0
 
   name              = local.name
   service           = "sysdig-monitor"
   plan              = var.plan
   location          = var.region
   resource_group_id = data.ibm_resource_group.tools_resource_group.id
-  tags              = var.tags
+  tags              = setsubtract(var.tags, [""])
 
   timeouts {
     create = "15m"

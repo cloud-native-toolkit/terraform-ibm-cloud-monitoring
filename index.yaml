@@ -8,6 +8,77 @@ tags:
   - monitoring
 versions:
   - platforms: []
+    providers:
+      - name: ibm
+        source: "ibm-cloud/ibm"
+    dependencies:
+      - id: resource_group
+        refs:
+          - source: github.com/cloud-native-toolkit/terraform-ibm-resource-group
+            version: ">= 2.1.0"
+    variables:
+      - name: resource_group_name
+        moduleRef:
+          id: resource_group
+          output: name
+        type: string
+        description: Existing resource group where the IKS cluster will be provisioned.
+      - name: region
+        scope: global
+        type: string
+        description: Geographic location of the resource (e.g. us-south, us-east)
+      - name: name_prefix
+        scope: global
+        type: string
+        description: The prefix name for the service. If not provided it will default to the resource group name
+        default: ""
+        optional: true
+      - name: plan
+        type: string
+        description: The type of plan the service instance should run under (trial or graduated-tier)
+        default: graduated-tier
+        optional: true
+      - name: tags
+        type: list(string)
+        description: Tags that should be applied to the service
+        default: []
+        optional: true
+      - name: provision
+        type: bool
+        description: Flag indicating that logdna instance should be provisioned
+        default: true
+        optional: true
+      - name: name
+        type: string
+        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
+        default: ""
+        optional: true
+      - name: label
+        type: string
+        description: The label used to build the resource name if not provided.
+        default: monitoring
+        optional: true
+    version: v4.0.0
+    outputs:
+      - name: id
+        description: The id of the provisioned instance.
+      - name: guid
+        description: The id of the provisioned instance.
+      - name: name
+        description: The name of the provisioned instance.
+      - name: crn
+        description: The id of the provisioned instance
+      - name: location
+        description: The location of the provisioned instance
+      - name: service
+        description: The service name of the provisioned instance
+      - name: label
+        description: The label for the instance
+      - name: key_name
+        description: The name of the key provisioned for the Sysdig instance.
+      - name: access_key
+        description: The access key for the Sysdig instance.
+  - platforms: []
     dependencies:
       - id: resource_group
         refs:

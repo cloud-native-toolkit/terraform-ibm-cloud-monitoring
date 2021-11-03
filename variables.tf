@@ -38,11 +38,6 @@ variable "name" {
   default     = ""
 }
 
-variable "ibmcloud_api_key" {
-  type        = string
-  description = "The IBM Cloud api token"
-}
-
 variable "label" {
   type        = string
   description = "The label used to build the resource name if not provided."

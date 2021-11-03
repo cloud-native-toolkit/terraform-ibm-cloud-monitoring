@@ -7,6 +7,9 @@ tags:
     - monitoring
 versions:
 - platforms: []
+  providers:
+    - name: ibm
+      source: "ibm-cloud/ibm"
   dependencies:
     - id: resource_group
       refs:
@@ -20,6 +23,4 @@ versions:
     - name: region
       scope: global
     - name: name_prefix
-      scope: global
-    - name: ibmcloud_api_key
       scope: global

@@ -38,7 +38,7 @@ provider "ibm" {
 }
 
 module "cloud-monitoring" {
-  source = "github.com/cloud-native-toolkit/terraform-ibm-cloud-monitoring.git"
+  source = "cloud-native-toolkit/cloud-monitoring/ibm"
 
   resource_group_name      = module.resource_group.name
   region                   = var.region

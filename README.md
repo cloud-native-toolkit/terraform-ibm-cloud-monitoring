@@ -1,6 +1,6 @@
-# IBM Cloud SysDig service terraform module
+# IBM Cloud Monitoring service terraform module
 
-Module to provision an instance of IBM Monitoring (Sysdig) in a resource group.
+Module to provision an instance of IBM Cloud Monitoring in a resource group in an IBM Cloud account.
 
 **Note:** This module follows the Terraform conventions regarding how provider configuration is defined within the Terraform template and passed into the module - https://www.terraform.io/docs/language/modules/develop/providers.html. The default provider configuration flows through to the module. If different configuration is required for a module, it can be explicitly passed in the `providers` block of the module - https://www.terraform.io/docs/language/modules/develop/providers.html#passing-providers-explicitly.
 
@@ -37,8 +37,8 @@ provider "ibm" {
   region = var.region
 }
 
-module "sysdig" {
-  source = "github.com/cloud-native-toolkit/terraform-ibm-sysdig.git"
+module "cloud-monitoring" {
+  source = "github.com/cloud-native-toolkit/terraform-ibm-cloud-monitoring.git"
 
   resource_group_name      = module.resource_group.name
   region                   = var.region

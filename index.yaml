@@ -1,21 +1,94 @@
-id: github.com/cloud-native-toolkit/terraform-ibm-sysdig
-name: sysdig
+id: github.com/cloud-native-toolkit/terraform-ibm-cloud-monitoring
+name: ibm-cloud-monitoring
 type: terraform
-description: Module to set up the Sysdig into a cluster
+description: Module provision an instance of IBM Cloud Monitoring in an IBM Cloud account
 tags:
   - tools
-  - devops
   - monitoring
+  - ibm
 versions:
   - platforms: []
     providers:
       - name: ibm
-        source: "ibm-cloud/ibm"
+        source: ibm-cloud/ibm
     dependencies:
       - id: resource_group
         refs:
           - source: github.com/cloud-native-toolkit/terraform-ibm-resource-group
-            version: ">= 2.1.0"
+            version: '>= 2.1.0'
+    variables:
+      - name: resource_group_name
+        type: string
+        description: Existing resource group where the IKS cluster will be provisioned.
+        moduleRef:
+          id: resource_group
+          output: name
+      - name: region
+        type: string
+        description: Geographic location of the resource (e.g. us-south, us-east)
+        scope: global
+      - name: name_prefix
+        type: string
+        description: >-
+          The prefix name for the service. If not provided it will default to
+          the resource group name
+        default: ''
+        scope: global
+      - name: plan
+        type: string
+        description: >-
+          The type of plan the service instance should run under (trial or
+          graduated-tier)
+        default: graduated-tier
+      - name: tags
+        type: list(string)
+        description: Tags that should be applied to the service
+        default: []
+      - name: provision
+        type: bool
+        description: Flag indicating that logdna instance should be provisioned
+        default: true
+      - name: name
+        type: string
+        description: >-
+          The name that should be used for the service, particularly when
+          connecting to an existing service. If not provided then the name will
+          be defaulted to {name prefix}-{service}
+        default: ''
+      - name: label
+        type: string
+        description: The label used to build the resource name if not provided.
+        default: monitoring
+    version: v4.1.0
+    outputs:
+      - name: id
+        description: The id of the provisioned instance.
+      - name: guid
+        description: The id of the provisioned instance.
+      - name: name
+        description: The name of the provisioned instance.
+      - name: crn
+        description: The id of the provisioned instance
+      - name: location
+        description: The location of the provisioned instance
+      - name: service
+        description: The service name of the provisioned instance
+      - name: label
+        description: The label for the instance
+      - name: key_name
+        description: The name of the key provisioned for the Sysdig instance.
+      - name: access_key
+        description: The access key for the Sysdig instance.
+        sensitive: true
+  - platforms: []
+    providers:
+      - name: ibm
+        source: ibm-cloud/ibm
+    dependencies:
+      - id: resource_group
+        refs:
+          - source: github.com/cloud-native-toolkit/terraform-ibm-resource-group
+            version: '>= 2.1.0'
     variables:
       - name: resource_group_name
         moduleRef:
@@ -30,12 +103,16 @@ versions:
       - name: name_prefix
         scope: global
         type: string
-        description: The prefix name for the service. If not provided it will default to the resource group name
-        default: ""
+        description: >-
+          The prefix name for the service. If not provided it will default to
+          the resource group name
+        default: ''
         optional: true
       - name: plan
         type: string
-        description: The type of plan the service instance should run under (trial or graduated-tier)
+        description: >-
+          The type of plan the service instance should run under (trial or
+          graduated-tier)
         default: graduated-tier
         optional: true
       - name: tags
@@ -50,8 +127,11 @@ versions:
         optional: true
       - name: name
         type: string
-        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
-        default: ""
+        description: >-
+          The name that should be used for the service, particularly when
+          connecting to an existing service. If not provided then the name will
+          be defaulted to {name prefix}-{service}
+        default: ''
         optional: true
       - name: label
         type: string
@@ -81,12 +161,12 @@ versions:
   - platforms: []
     providers:
       - name: ibm
-        source: "ibm-cloud/ibm"
+        source: ibm-cloud/ibm
     dependencies:
       - id: resource_group
         refs:
           - source: github.com/cloud-native-toolkit/terraform-ibm-resource-group
-            version: ">= 2.1.0"
+            version: '>= 2.1.0'
     variables:
       - name: resource_group_name
         moduleRef:
@@ -101,12 +181,16 @@ versions:
       - name: name_prefix
         scope: global
         type: string
-        description: The prefix name for the service. If not provided it will default to the resource group name
-        default: ""
+        description: >-
+          The prefix name for the service. If not provided it will default to
+          the resource group name
+        default: ''
         optional: true
       - name: plan
         type: string
-        description: The type of plan the service instance should run under (trial or graduated-tier)
+        description: >-
+          The type of plan the service instance should run under (trial or
+          graduated-tier)
         default: graduated-tier
         optional: true
       - name: tags
@@ -121,8 +205,11 @@ versions:
         optional: true
       - name: name
         type: string
-        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
-        default: ""
+        description: >-
+          The name that should be used for the service, particularly when
+          connecting to an existing service. If not provided then the name will
+          be defaulted to {name prefix}-{service}
+        default: ''
         optional: true
       - name: label
         type: string
@@ -154,7 +241,7 @@ versions:
       - id: resource_group
         refs:
           - source: github.com/cloud-native-toolkit/terraform-ibm-resource-group
-            version: ">= 2.1.0"
+            version: '>= 2.1.0'
     variables:
       - name: resource_group_name
         moduleRef:
@@ -169,8 +256,10 @@ versions:
       - name: name_prefix
         scope: global
         type: string
-        description: The prefix name for the service. If not provided it will default to the resource group name
-        default: ""
+        description: >-
+          The prefix name for the service. If not provided it will default to
+          the resource group name
+        default: ''
         optional: true
       - name: ibmcloud_api_key
         scope: global
@@ -178,7 +267,9 @@ versions:
         description: The IBM Cloud api token
       - name: plan
         type: string
-        description: The type of plan the service instance should run under (trial or graduated-tier)
+        description: >-
+          The type of plan the service instance should run under (trial or
+          graduated-tier)
         default: graduated-tier
         optional: true
       - name: tags
@@ -193,8 +284,11 @@ versions:
         optional: true
       - name: name
         type: string
-        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
-        default: ""
+        description: >-
+          The name that should be used for the service, particularly when
+          connecting to an existing service. If not provided then the name will
+          be defaulted to {name prefix}-{service}
+        default: ''
         optional: true
       - name: label
         type: string
@@ -226,7 +320,7 @@ versions:
       - id: resource_group
         refs:
           - source: github.com/cloud-native-toolkit/terraform-ibm-resource-group
-            version: ">= 2.1.0"
+            version: '>= 2.1.0'
     variables:
       - name: resource_group_name
         moduleRef:
@@ -241,8 +335,10 @@ versions:
       - name: name_prefix
         scope: global
         type: string
-        description: The prefix name for the service. If not provided it will default to the resource group name
-        default: ""
+        description: >-
+          The prefix name for the service. If not provided it will default to
+          the resource group name
+        default: ''
         optional: true
       - name: ibmcloud_api_key
         scope: global
@@ -250,7 +346,9 @@ versions:
         description: The IBM Cloud api token
       - name: plan
         type: string
-        description: The type of plan the service instance should run under (trial or graduated-tier)
+        description: >-
+          The type of plan the service instance should run under (trial or
+          graduated-tier)
         default: graduated-tier
         optional: true
       - name: tags
@@ -265,8 +363,11 @@ versions:
         optional: true
       - name: name
         type: string
-        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
-        default: ""
+        description: >-
+          The name that should be used for the service, particularly when
+          connecting to an existing service. If not provided then the name will
+          be defaulted to {name prefix}-{service}
+        default: ''
         optional: true
     version: v3.3.0
     outputs:
@@ -285,7 +386,7 @@ versions:
       - id: resource_group
         refs:
           - source: github.com/cloud-native-toolkit/terraform-ibm-resource-group
-            version: ">= 2.1.0"
+            version: '>= 2.1.0'
     variables:
       - name: resource_group_name
         moduleRef:
@@ -300,12 +401,16 @@ versions:
       - name: name_prefix
         scope: global
         type: string
-        description: The prefix name for the service. If not provided it will default to the resource group name
-        default: ""
+        description: >-
+          The prefix name for the service. If not provided it will default to
+          the resource group name
+        default: ''
         optional: true
       - name: plan
         type: string
-        description: The type of plan the service instance should run under (trial or graduated-tier)
+        description: >-
+          The type of plan the service instance should run under (trial or
+          graduated-tier)
         default: graduated-tier
         optional: true
       - name: tags
@@ -320,8 +425,11 @@ versions:
         optional: true
       - name: name
         type: string
-        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
-        default: ""
+        description: >-
+          The name that should be used for the service, particularly when
+          connecting to an existing service. If not provided then the name will
+          be defaulted to {name prefix}-{service}
+        default: ''
         optional: true
     version: v3.2.2
     outputs:
@@ -343,7 +451,7 @@ versions:
       - id: resource_group
         refs:
           - source: github.com/cloud-native-toolkit/terraform-ibm-resource-group
-            version: ">= 2.1.0"
+            version: '>= 2.1.0'
     variables:
       - name: resource_group_name
         moduleRef:
@@ -384,7 +492,7 @@ versions:
       - id: resource_group
         refs:
           - source: github.com/cloud-native-toolkit/terraform-ibm-resource-group
-            version: ">= 2.1.0"
+            version: '>= 2.1.0'
     variables:
       - name: resource_group_name
         moduleRef:
@@ -399,12 +507,16 @@ versions:
       - name: name_prefix
         scope: global
         type: string
-        description: The prefix name for the service. If not provided it will default to the resource group name
-        default: ""
+        description: >-
+          The prefix name for the service. If not provided it will default to
+          the resource group name
+        default: ''
         optional: true
       - name: plan
         type: string
-        description: The type of plan the service instance should run under (trial or graduated-tier)
+        description: >-
+          The type of plan the service instance should run under (trial or
+          graduated-tier)
         default: graduated-tier
         optional: true
       - name: tags
@@ -419,8 +531,11 @@ versions:
         optional: true
       - name: name
         type: string
-        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
-        default: ""
+        description: >-
+          The name that should be used for the service, particularly when
+          connecting to an existing service. If not provided then the name will
+          be defaulted to {name prefix}-{service}
+        default: ''
         optional: true
     version: v3.2.0
     outputs:
@@ -442,7 +557,7 @@ versions:
       - id: resource_group
         refs:
           - source: github.com/cloud-native-toolkit/terraform-ibm-resource-group
-            version: ">= 2.1.0"
+            version: '>= 2.1.0'
     variables:
       - name: resource_group_name
         moduleRef:
@@ -457,12 +572,16 @@ versions:
       - name: name_prefix
         scope: global
         type: string
-        description: The prefix name for the service. If not provided it will default to the resource group name
-        default: ""
+        description: >-
+          The prefix name for the service. If not provided it will default to
+          the resource group name
+        default: ''
         optional: true
       - name: plan
         type: string
-        description: The type of plan the service instance should run under (trial or graduated-tier)
+        description: >-
+          The type of plan the service instance should run under (trial or
+          graduated-tier)
         default: graduated-tier
         optional: true
       - name: tags
@@ -477,8 +596,11 @@ versions:
         optional: true
       - name: name
         type: string
-        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
-        default: ""
+        description: >-
+          The name that should be used for the service, particularly when
+          connecting to an existing service. If not provided then the name will
+          be defaulted to {name prefix}-{service}
+        default: ''
         optional: true
     version: v3.1.3
     outputs:
@@ -494,7 +616,7 @@ versions:
       - id: resource_group
         refs:
           - source: github.com/cloud-native-toolkit/terraform-ibm-resource-group
-            version: ">= 2.1.0"
+            version: '>= 2.1.0'
     variables:
       - name: resource_group_name
         moduleRef:
@@ -509,12 +631,16 @@ versions:
       - name: name_prefix
         scope: global
         type: string
-        description: The prefix name for the service. If not provided it will default to the resource group name
-        default: ""
+        description: >-
+          The prefix name for the service. If not provided it will default to
+          the resource group name
+        default: ''
         optional: true
       - name: plan
         type: string
-        description: The type of plan the service instance should run under (trial or graduated-tier)
+        description: >-
+          The type of plan the service instance should run under (trial or
+          graduated-tier)
         default: graduated-tier
         optional: true
       - name: tags
@@ -529,8 +655,11 @@ versions:
         optional: true
       - name: name
         type: string
-        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
-        default: ""
+        description: >-
+          The name that should be used for the service, particularly when
+          connecting to an existing service. If not provided then the name will
+          be defaulted to {name prefix}-{service}
+        default: ''
         optional: true
     version: v3.1.2
     outputs:
@@ -552,12 +681,16 @@ versions:
       - name: name_prefix
         scope: global
         type: string
-        description: The prefix name for the service. If not provided it will default to the resource group name
-        default: ""
+        description: >-
+          The prefix name for the service. If not provided it will default to
+          the resource group name
+        default: ''
         optional: true
       - name: plan
         type: string
-        description: The type of plan the service instance should run under (trial or graduated-tier)
+        description: >-
+          The type of plan the service instance should run under (trial or
+          graduated-tier)
         default: graduated-tier
         optional: true
       - name: tags
@@ -570,8 +703,11 @@ versions:
         description: Flag indicating that logdna instance should be provisioned
       - name: name
         type: string
-        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
-        default: ""
+        description: >-
+          The name that should be used for the service, particularly when
+          connecting to an existing service. If not provided then the name will
+          be defaulted to {name prefix}-{service}
+        default: ''
         optional: true
     version: v3.1.1
     outputs:
@@ -587,14 +723,14 @@ versions:
       - id: cluster
         refs:
           - source: github.com/ibm-garage-cloud/terraform-ibm-container-platform
-            version: ">= 1.7.0"
+            version: '>= 1.7.0'
           - source: github.com/ibm-garage-cloud/terraform-k8s-ocp-cluster
-            version: ">= 2.0.0"
+            version: '>= 2.0.0'
         optional: true
       - id: namespace
         refs:
           - source: github.com/ibm-garage-cloud/terraform-k8s-namespace
-            version: ">= 2.1.0"
+            version: '>= 2.1.0'
         optional: true
     variables:
       - name: resource_group_name
@@ -608,12 +744,16 @@ versions:
       - name: name_prefix
         scope: global
         type: string
-        description: The prefix name for the service. If not provided it will default to the resource group name
-        default: ""
+        description: >-
+          The prefix name for the service. If not provided it will default to
+          the resource group name
+        default: ''
         optional: true
       - name: plan
         type: string
-        description: The type of plan the service instance should run under (trial or graduated-tier)
+        description: >-
+          The type of plan the service instance should run under (trial or
+          graduated-tier)
         default: graduated-tier
         optional: true
       - name: tags
@@ -626,8 +766,11 @@ versions:
         description: Flag indicating that logdna instance should be provisioned
       - name: name
         type: string
-        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
-        default: ""
+        description: >-
+          The name that should be used for the service, particularly when
+          connecting to an existing service. If not provided then the name will
+          be defaulted to {name prefix}-{service}
+        default: ''
         optional: true
     version: v3.1.0
     outputs:
@@ -643,14 +786,14 @@ versions:
       - id: cluster
         refs:
           - source: github.com/ibm-garage-cloud/terraform-ibm-container-platform
-            version: ">= 1.7.0"
+            version: '>= 1.7.0'
           - source: github.com/ibm-garage-cloud/terraform-k8s-ocp-cluster
-            version: ">= 2.0.0"
+            version: '>= 2.0.0'
         optional: true
       - id: namespace
         refs:
           - source: github.com/ibm-garage-cloud/terraform-k8s-namespace
-            version: ">= 2.1.0"
+            version: '>= 2.1.0'
         optional: true
     variables:
       - name: cluster_id
@@ -660,7 +803,7 @@ versions:
         optional: true
         type: string
         description: The id of the cluster into which the sysdig instance should be bound
-        default: ""
+        default: ''
       - name: cluster_name
         moduleRef:
           id: cluster
@@ -668,7 +811,7 @@ versions:
         optional: true
         type: string
         description: The name of the cluster into which the sysdig instance should be bound
-        default: ""
+        default: ''
       - name: cluster_config_file_path
         moduleRef:
           id: cluster
@@ -676,7 +819,7 @@ versions:
         optional: true
         type: string
         description: The path to the config file for the cluster
-        default: ""
+        default: ''
       - name: tools_namespace
         moduleRef:
           id: namespace
@@ -684,7 +827,9 @@ versions:
           discriminator: tools
         optional: true
         type: string
-        description: The namespace where the tools have been deployed (where the configmap should be created)
+        description: >-
+          The namespace where the tools have been deployed (where the configmap
+          should be created)
         default: default
       - name: resource_group_name
         scope: global
@@ -697,18 +842,24 @@ versions:
       - name: name_prefix
         scope: global
         type: string
-        description: The prefix name for the service. If not provided it will default to the resource group name
-        default: ""
+        description: >-
+          The prefix name for the service. If not provided it will default to
+          the resource group name
+        default: ''
         optional: true
       - name: private_endpoint
         scope: global
         type: string
-        description: Flag indicating that the agent should be created with private endpoints
-        default: "true"
+        description: >-
+          Flag indicating that the agent should be created with private
+          endpoints
+        default: 'true'
         optional: true
       - name: plan
         type: string
-        description: The type of plan the service instance should run under (trial or graduated-tier)
+        description: >-
+          The type of plan the service instance should run under (trial or
+          graduated-tier)
         default: graduated-tier
         optional: true
       - name: tags
@@ -721,8 +872,11 @@ versions:
         description: Flag indicating that logdna instance should be provisioned
       - name: name
         type: string
-        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
-        default: ""
+        description: >-
+          The name that should be used for the service, particularly when
+          connecting to an existing service. If not provided then the name will
+          be defaulted to {name prefix}-{service}
+        default: ''
         optional: true
       - name: namespace
         type: string
@@ -732,12 +886,14 @@ versions:
       - name: sync
         type: string
         description: Semaphore value to sync up modules
-        default: ""
+        default: ''
         optional: true
     version: v3.0.1
     outputs:
       - name: sync
-        description: output "sync" {   value = "sysdig"   depends_on = [helm_release.sysdig] }
+        description: >-
+          output "sync" {   value = "sysdig"   depends_on =
+          [helm_release.sysdig] }
   - platforms:
       - kubernetes
       - ocp3
@@ -746,13 +902,13 @@ versions:
       - id: cluster
         refs:
           - source: github.com/ibm-garage-cloud/terraform-ibm-container-platform
-            version: ">= 1.7.0"
+            version: '>= 1.7.0'
           - source: github.com/ibm-garage-cloud/terraform-k8s-ocp-cluster
-            version: ">= 2.0.0"
+            version: '>= 2.0.0'
       - id: namespace
         refs:
           - source: github.com/ibm-garage-cloud/terraform-k8s-namespace
-            version: ">= 2.1.0"
+            version: '>= 2.1.0'
     variables:
       - name: cluster_id
         moduleRef:
@@ -761,7 +917,7 @@ versions:
         optional: true
         type: string
         description: The id of the cluster into which the sysdig instance should be bound
-        default: ""
+        default: ''
       - name: cluster_name
         moduleRef:
           id: cluster
@@ -769,7 +925,7 @@ versions:
         optional: true
         type: string
         description: The name of the cluster into which the sysdig instance should be bound
-        default: ""
+        default: ''
       - name: cluster_config_file_path
         moduleRef:
           id: cluster
@@ -777,7 +933,7 @@ versions:
         optional: true
         type: string
         description: The path to the config file for the cluster
-        default: ""
+        default: ''
       - name: tools_namespace
         moduleRef:
           id: namespace
@@ -785,7 +941,9 @@ versions:
           discriminator: tools
         optional: true
         type: string
-        description: The namespace where the tools have been deployed (where the configmap should be created)
+        description: >-
+          The namespace where the tools have been deployed (where the configmap
+          should be created)
         default: default
       - name: resource_group_name
         scope: global
@@ -798,18 +956,24 @@ versions:
       - name: name_prefix
         scope: global
         type: string
-        description: The prefix name for the service. If not provided it will default to the resource group name
-        default: ""
+        description: >-
+          The prefix name for the service. If not provided it will default to
+          the resource group name
+        default: ''
         optional: true
       - name: private_endpoint
         scope: global
         type: string
-        description: Flag indicating that the agent should be created with private endpoints
-        default: "true"
+        description: >-
+          Flag indicating that the agent should be created with private
+          endpoints
+        default: 'true'
         optional: true
       - name: plan
         type: string
-        description: The type of plan the service instance should run under (trial or graduated-tier)
+        description: >-
+          The type of plan the service instance should run under (trial or
+          graduated-tier)
         default: graduated-tier
         optional: true
       - name: tags
@@ -822,8 +986,11 @@ versions:
         description: Flag indicating that logdna instance should be provisioned
       - name: name
         type: string
-        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
-        default: ""
+        description: >-
+          The name that should be used for the service, particularly when
+          connecting to an existing service. If not provided then the name will
+          be defaulted to {name prefix}-{service}
+        default: ''
         optional: true
       - name: namespace
         type: string
@@ -833,12 +1000,14 @@ versions:
       - name: sync
         type: string
         description: Semaphore value to sync up modules
-        default: ""
+        default: ''
         optional: true
     version: v3.0.0
     outputs:
       - name: sync
-        description: output "sync" {   value = "sysdig"   depends_on = [helm_release.sysdig] }
+        description: >-
+          output "sync" {   value = "sysdig"   depends_on =
+          [helm_release.sysdig] }
   - platforms:
       - kubernetes
       - ocp3
@@ -847,13 +1016,13 @@ versions:
       - id: cluster
         refs:
           - source: github.com/ibm-garage-cloud/terraform-ibm-container-platform
-            version: ">= 1.7.0"
+            version: '>= 1.7.0'
           - source: github.com/ibm-garage-cloud/terraform-k8s-ocp-cluster
-            version: ">= 2.0.0"
+            version: '>= 2.0.0'
       - id: namespace
         refs:
           - source: github.com/ibm-garage-cloud/terraform-k8s-namespace
-            version: ">= 2.1.0"
+            version: '>= 2.1.0'
     variables:
       - name: cluster_id
         moduleRef:
@@ -862,7 +1031,7 @@ versions:
         optional: true
         type: string
         description: The id of the cluster into which the sysdig instance should be bound
-        default: ""
+        default: ''
       - name: cluster_name
         moduleRef:
           id: cluster
@@ -870,7 +1039,7 @@ versions:
         optional: true
         type: string
         description: The name of the cluster into which the sysdig instance should be bound
-        default: ""
+        default: ''
       - name: cluster_config_file_path
         moduleRef:
           id: cluster
@@ -878,7 +1047,7 @@ versions:
         optional: true
         type: string
         description: The path to the config file for the cluster
-        default: ""
+        default: ''
       - name: tools_namespace
         moduleRef:
           id: namespace
@@ -886,7 +1055,9 @@ versions:
           discriminator: tools
         optional: true
         type: string
-        description: The namespace where the tools have been deployed (where the configmap should be created)
+        description: >-
+          The namespace where the tools have been deployed (where the configmap
+          should be created)
         default: default
       - name: resource_group_name
         scope: global
@@ -899,18 +1070,24 @@ versions:
       - name: name_prefix
         scope: global
         type: string
-        description: The prefix name for the service. If not provided it will default to the resource group name
-        default: ""
+        description: >-
+          The prefix name for the service. If not provided it will default to
+          the resource group name
+        default: ''
         optional: true
       - name: private_endpoint
         scope: global
         type: string
-        description: Flag indicating that the agent should be created with private endpoints
-        default: "true"
+        description: >-
+          Flag indicating that the agent should be created with private
+          endpoints
+        default: 'true'
         optional: true
       - name: plan
         type: string
-        description: The type of plan the service instance should run under (trial or graduated-tier)
+        description: >-
+          The type of plan the service instance should run under (trial or
+          graduated-tier)
         default: graduated-tier
         optional: true
       - name: tags
@@ -923,8 +1100,11 @@ versions:
         description: Flag indicating that logdna instance should be provisioned
       - name: name
         type: string
-        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
-        default: ""
+        description: >-
+          The name that should be used for the service, particularly when
+          connecting to an existing service. If not provided then the name will
+          be defaulted to {name prefix}-{service}
+        default: ''
         optional: true
       - name: namespace
         type: string
@@ -934,12 +1114,14 @@ versions:
       - name: sync
         type: string
         description: Semaphore value to sync up modules
-        default: ""
+        default: ''
         optional: true
     version: v2.7.0
     outputs:
       - name: sync
-        description: output "sync" {   value = "sysdig"   depends_on = [helm_release.sysdig] }
+        description: >-
+          output "sync" {   value = "sysdig"   depends_on =
+          [helm_release.sysdig] }
   - platforms:
       - kubernetes
       - ocp3
@@ -948,13 +1130,13 @@ versions:
       - id: cluster
         refs:
           - source: github.com/ibm-garage-cloud/terraform-ibm-container-platform
-            version: ">= 1.7.0"
+            version: '>= 1.7.0'
           - source: github.com/ibm-garage-cloud/terraform-k8s-ocp-cluster
-            version: ">= 2.0.0"
+            version: '>= 2.0.0'
       - id: namespace
         refs:
           - source: github.com/ibm-garage-cloud/terraform-k8s-namespace
-            version: ">= 2.1.0"
+            version: '>= 2.1.0'
     variables:
       - name: cluster_id
         moduleRef:
@@ -963,7 +1145,7 @@ versions:
         optional: true
         type: string
         description: The id of the cluster into which the sysdig instance should be bound
-        default: ""
+        default: ''
       - name: cluster_name
         moduleRef:
           id: cluster
@@ -971,7 +1153,7 @@ versions:
         optional: true
         type: string
         description: The name of the cluster into which the sysdig instance should be bound
-        default: ""
+        default: ''
       - name: cluster_config_file_path
         moduleRef:
           id: cluster
@@ -979,7 +1161,7 @@ versions:
         optional: true
         type: string
         description: The path to the config file for the cluster
-        default: ""
+        default: ''
       - name: tools_namespace
         moduleRef:
           id: namespace
@@ -987,7 +1169,9 @@ versions:
           discriminator: tools
         optional: true
         type: string
-        description: The namespace where the tools have been deployed (where the configmap should be created)
+        description: >-
+          The namespace where the tools have been deployed (where the configmap
+          should be created)
         default: default
       - name: resource_group_name
         scope: global
@@ -1000,18 +1184,24 @@ versions:
       - name: name_prefix
         scope: global
         type: string
-        description: The prefix name for the service. If not provided it will default to the resource group name
-        default: ""
+        description: >-
+          The prefix name for the service. If not provided it will default to
+          the resource group name
+        default: ''
         optional: true
       - name: private_endpoint
         scope: global
         type: string
-        description: Flag indicating that the agent should be created with private endpoints
-        default: "true"
+        description: >-
+          Flag indicating that the agent should be created with private
+          endpoints
+        default: 'true'
         optional: true
       - name: plan
         type: string
-        description: The type of plan the service instance should run under (trial or graduated-tier)
+        description: >-
+          The type of plan the service instance should run under (trial or
+          graduated-tier)
         default: graduated-tier
         optional: true
       - name: tags
@@ -1024,8 +1214,11 @@ versions:
         description: Flag indicating that logdna instance should be provisioned
       - name: name
         type: string
-        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
-        default: ""
+        description: >-
+          The name that should be used for the service, particularly when
+          connecting to an existing service. If not provided then the name will
+          be defaulted to {name prefix}-{service}
+        default: ''
         optional: true
       - name: namespace
         type: string
@@ -1035,12 +1228,14 @@ versions:
       - name: sync
         type: string
         description: Semaphore value to sync up modules
-        default: ""
+        default: ''
         optional: true
     version: v2.6.0
     outputs:
       - name: sync
-        description: output "sync" {   value = "sysdig"   depends_on = [helm_release.sysdig] }
+        description: >-
+          output "sync" {   value = "sysdig"   depends_on =
+          [helm_release.sysdig] }
   - platforms:
       - kubernetes
       - ocp3
@@ -1049,13 +1244,13 @@ versions:
       - id: cluster
         refs:
           - source: github.com/ibm-garage-cloud/terraform-ibm-container-platform
-            version: ">= 1.7.0"
+            version: '>= 1.7.0'
           - source: github.com/ibm-garage-cloud/terraform-k8s-ocp-cluster
-            version: ">= 2.0.0"
+            version: '>= 2.0.0'
       - id: namespace
         refs:
           - source: github.com/ibm-garage-cloud/terraform-k8s-namespace
-            version: ">= 2.1.0"
+            version: '>= 2.1.0'
     variables:
       - name: cluster_id
         moduleRef:
@@ -1063,7 +1258,7 @@ versions:
           output: id
         type: string
         description: The id of the cluster into which the sysdig instance should be bound
-        default: ""
+        default: ''
         optional: true
       - name: cluster_name
         moduleRef:
@@ -1071,15 +1266,17 @@ versions:
           output: name
         type: string
         description: The name of the cluster into which the sysdig instance should be bound
-        default: ""
+        default: ''
         optional: true
       - name: cluster_type
         moduleRef:
           id: cluster
           output: type_code
         type: string
-        description: The type of cluster that should be created (openshift or ocp3 or ocp4 or kubernetes)
-        default: ""
+        description: >-
+          The type of cluster that should be created (openshift or ocp3 or ocp4
+          or kubernetes)
+        default: ''
         optional: true
       - name: cluster_config_file_path
         moduleRef:
@@ -1087,7 +1284,7 @@ versions:
           output: config_file_path
         type: string
         description: The path to the config file for the cluster
-        default: ""
+        default: ''
         optional: true
       - name: tools_namespace
         moduleRef:
@@ -1095,7 +1292,9 @@ versions:
           output: name
           discriminator: tools
         type: string
-        description: The namespace where the tools have been deployed (where the configmap should be created)
+        description: >-
+          The namespace where the tools have been deployed (where the configmap
+          should be created)
         default: default
         optional: true
       - name: resource_group_name
@@ -1109,18 +1308,24 @@ versions:
       - name: name_prefix
         scope: global
         type: string
-        description: The prefix name for the service. If not provided it will default to the resource group name
-        default: ""
+        description: >-
+          The prefix name for the service. If not provided it will default to
+          the resource group name
+        default: ''
         optional: true
       - name: private_endpoint
         scope: global
         type: string
-        description: Flag indicating that the agent should be created with private endpoints
-        default: "true"
+        description: >-
+          Flag indicating that the agent should be created with private
+          endpoints
+        default: 'true'
         optional: true
       - name: plan
         type: string
-        description: The type of plan the service instance should run under (trial or graduated-tier)
+        description: >-
+          The type of plan the service instance should run under (trial or
+          graduated-tier)
         default: graduated-tier
         optional: true
       - name: tags
@@ -1133,8 +1338,11 @@ versions:
         description: Flag indicating that logdna instance should be provisioned
       - name: name
         type: string
-        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
-        default: ""
+        description: >-
+          The name that should be used for the service, particularly when
+          connecting to an existing service. If not provided then the name will
+          be defaulted to {name prefix}-{service}
+        default: ''
         optional: true
       - name: namespace
         type: string
@@ -1144,12 +1352,14 @@ versions:
       - name: sync
         type: string
         description: Semaphore value to sync up modules
-        default: ""
+        default: ''
         optional: true
     version: v2.5.0
     outputs:
       - name: sync
-        description: output "sync" {   value = "sysdig"   depends_on = [helm_release.sysdig] }
+        description: >-
+          output "sync" {   value = "sysdig"   depends_on =
+          [helm_release.sysdig] }
   - platforms:
       - kubernetes
       - ocp3
@@ -1158,13 +1368,13 @@ versions:
       - id: cluster
         refs:
           - source: github.com/ibm-garage-cloud/terraform-ibm-container-platform
-            version: ">= 1.7.0"
+            version: '>= 1.7.0'
           - source: github.com/ibm-garage-cloud/terraform-k8s-ocp-cluster
-            version: ">= 2.0.0"
+            version: '>= 2.0.0'
       - id: namespace
         refs:
           - source: github.com/ibm-garage-cloud/terraform-k8s-namespace
-            version: ">= 2.1.0"
+            version: '>= 2.1.0'
     variables:
       - name: cluster_id
         moduleRef:
@@ -1172,7 +1382,7 @@ versions:
           output: id
         type: string
         description: The id of the cluster into which the sysdig instance should be bound
-        default: ""
+        default: ''
         optional: true
       - name: cluster_name
         moduleRef:
@@ -1180,15 +1390,17 @@ versions:
           output: name
         type: string
         description: The name of the cluster into which the sysdig instance should be bound
-        default: ""
+        default: ''
         optional: true
       - name: cluster_type
         moduleRef:
           id: cluster
           output: type_code
         type: string
-        description: The type of cluster that should be created (openshift or ocp3 or ocp4 or kubernetes)
-        default: ""
+        description: >-
+          The type of cluster that should be created (openshift or ocp3 or ocp4
+          or kubernetes)
+        default: ''
         optional: true
       - name: cluster_config_file_path
         moduleRef:
@@ -1196,7 +1408,7 @@ versions:
           output: config_file_path
         type: string
         description: The path to the config file for the cluster
-        default: ""
+        default: ''
         optional: true
       - name: tools_namespace
         moduleRef:
@@ -1204,7 +1416,9 @@ versions:
           output: name
           discriminator: tools
         type: string
-        description: The namespace where the tools have been deployed (where the configmap should be created)
+        description: >-
+          The namespace where the tools have been deployed (where the configmap
+          should be created)
         default: default
         optional: true
       - name: resource_group_name
@@ -1215,12 +1429,16 @@ versions:
         description: Geographic location of the resource (e.g. us-south, us-east)
       - name: name_prefix
         type: string
-        description: The prefix name for the service. If not provided it will default to the resource group name
-        default: ""
+        description: >-
+          The prefix name for the service. If not provided it will default to
+          the resource group name
+        default: ''
         optional: true
       - name: plan
         type: string
-        description: The type of plan the service instance should run under (trial or graduated-tier)
+        description: >-
+          The type of plan the service instance should run under (trial or
+          graduated-tier)
         default: graduated-tier
         optional: true
       - name: tags
@@ -1233,8 +1451,11 @@ versions:
         description: Flag indicating that logdna instance should be provisioned
       - name: name
         type: string
-        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
-        default: ""
+        description: >-
+          The name that should be used for the service, particularly when
+          connecting to an existing service. If not provided then the name will
+          be defaulted to {name prefix}-{service}
+        default: ''
         optional: true
       - name: namespace
         type: string
@@ -1244,17 +1465,21 @@ versions:
       - name: sync
         type: string
         description: Semaphore value to sync up modules
-        default: ""
+        default: ''
         optional: true
       - name: private_endpoint
         type: string
-        description: Flag indicating that the agent should be created with private endpoints
-        default: "true"
+        description: >-
+          Flag indicating that the agent should be created with private
+          endpoints
+        default: 'true'
         optional: true
     version: v2.4.0
     outputs:
       - name: sync
-        description: output "sync" {   value = "sysdig"   depends_on = [helm_release.sysdig] }
+        description: >-
+          output "sync" {   value = "sysdig"   depends_on =
+          [helm_release.sysdig] }
   - platforms:
       - kubernetes
       - ocp3
@@ -1263,13 +1488,13 @@ versions:
       - id: cluster
         refs:
           - source: github.com/ibm-garage-cloud/terraform-ibm-container-platform
-            version: ">= 1.7.0"
+            version: '>= 1.7.0'
           - source: github.com/ibm-garage-cloud/terraform-k8s-ocp-cluster
-            version: ">= 2.0.0"
+            version: '>= 2.0.0'
       - id: namespace
         refs:
           - source: github.com/ibm-garage-cloud/terraform-k8s-namespace
-            version: ">= 2.1.0"
+            version: '>= 2.1.0'
     variables:
       - name: cluster_id
         moduleRef:
@@ -1290,7 +1515,9 @@ versions:
           id: cluster
           output: type_code
         type: string
-        description: The type of cluster that should be created (openshift or ocp3 or ocp4 or kubernetes)
+        description: >-
+          The type of cluster that should be created (openshift or ocp3 or ocp4
+          or kubernetes)
         optional: true
       - name: cluster_config_file_path
         moduleRef:
@@ -1305,7 +1532,9 @@ versions:
           output: name
           discriminator: tools
         type: string
-        description: The namespace where the tools have been deployed (where the configmap should be created)
+        description: >-
+          The namespace where the tools have been deployed (where the configmap
+          should be created)
         optional: true
       - name: resource_group_name
         type: string
@@ -1315,11 +1544,15 @@ versions:
         description: Geographic location of the resource (e.g. us-south, us-east)
       - name: name_prefix
         type: string
-        description: The prefix name for the service. If not provided it will default to the resource group name
+        description: >-
+          The prefix name for the service. If not provided it will default to
+          the resource group name
         optional: true
       - name: plan
         type: string
-        description: The type of plan the service instance should run under (trial or graduated-tier)
+        description: >-
+          The type of plan the service instance should run under (trial or
+          graduated-tier)
         optional: true
       - name: tags
         type: list(string)
@@ -1330,7 +1563,10 @@ versions:
         description: Flag indicating that logdna instance should be provisioned
       - name: name
         type: string
-        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
+        description: >-
+          The name that should be used for the service, particularly when
+          connecting to an existing service. If not provided then the name will
+          be defaulted to {name prefix}-{service}
         optional: true
       - name: namespace
         type: string
@@ -1343,4 +1579,7 @@ versions:
     version: v2.3.3
     outputs:
       - name: sync
-        description: output "sync" {   value = "sysdig"   depends_on = [helm_release.sysdig] }
+        description: >-
+          output "sync" {   value = "sysdig"   depends_on =
+          [helm_release.sysdig] }
+alias: sysdig

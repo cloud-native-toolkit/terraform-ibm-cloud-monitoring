@@ -1,10 +1,11 @@
-name: sysdig
+name: ibm-cloud-monitoring
+alias: sysdig
 type: terraform
-description: Module to set up the Sysdig into a cluster
+description: Module provision an instance of IBM Cloud Monitoring in an IBM Cloud account
 tags:
     - tools
-    - devops
     - monitoring
+    - ibm
 versions:
 - platforms: []
   providers:

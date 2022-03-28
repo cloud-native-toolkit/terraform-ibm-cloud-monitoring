@@ -1,5 +1,6 @@
 name: ibm-cloud-monitoring
 alias: sysdig
+registryId: cloud-native-toolkit/cloud-monitoring/ibm
 type: terraform
 description: Module provision an instance of IBM Cloud Monitoring in an IBM Cloud account
 tags:
